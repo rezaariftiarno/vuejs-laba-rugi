@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Auto Calculatiion Vue.Js</title>
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.1/dist/css/bootstrap.css">
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert"></script>
+</head>
+<body>
+
+	<!-- Tampilan Pendapatan pada layar user -->
+	<div id="labarugi">
+		<div class="container">
+			<h1 style="text-align: center; margin: auto;">{{ title }}</h1>
+			<br/>
+			<div class="row">
+				<div class="col-md-8">
+					<h3 style="text-align: center auto">Pendapatan</h3>
+					<table class="table table-bordered table-striped">
+						<thead>
+							<tr>
+								<th colspan="">Action</th>
+								<th>Nama</th>
+								<th>Nilai</th>
+							</tr>
+						</thead>
+						<tbody v-for="pro in profits" :key="pro.namePendapatan">
+							<tr  >
+								<td>
+									<button class="btn btn-danger btn-sm" @click="removePendapatan(pro)">&times;</button>
+								</td>
+								<td>{{ pro.namePendapatan }}</td>
+								<td>Rp {{pro.pricePendapatan}}</td>
+							</tr>
+						</tbody>
+						<tbody>
+							<tr>
+								<td colspan="6">Total Pendapatan</td>
+								<td>Rp {{grandtotalpendapatan}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-md-4">
+					<form>
+						<div class="form-group">
+							<label>Keterangan</label>
+							<input placeholder="Masukan Keterangan" class="form-control" type="text" name="" v-model="profit.namePendapatan"/>
+						</div>
+						<div class="form-group">
+							<label>Nilai</label>
+							<input class="form-control" type="number" class="form-control" name="" v-model="profit.pricePendapatan">
+						</div>
+						<button class="btn btn-primary" @click.prevent="addPendapatan">Masukan Pendapatan</button>
+					</form>
+				</div>
+			</div>
+		</div>
+
+	<!-- Akhir tampilan Pendapatan pada layar user -->
+
+<br/>
+
+	<!-- Tampilan Beban pada layar user -->
+
+		<div class="container">
+			<div class="row">
+				<div class="col-md-8">
+					<h3 style="text-align: center auto">Beban</h3>
+					<table class="table table-bordered table-striped">
+						<thead>
+							<tr>
+								<th colspan="">Action</th>
+								<th>Nama</th>
+								<th>Nilai</th>
+							</tr>
+						</thead>
+						<tbody v-for="pro in losses" :key="pro.nameBeban">
+							<tr  >
+								<td>
+									<button class="btn btn-danger btn-sm" @click="removeBeban(pro)">&times;</button>
+								</td>
+								<td>{{ pro.nameBeban }}</td>
+								<td>Rp {{pro.priceBeban}}</td>
+							</tr>
+						</tbody>
+						<tbody>
+							<tr>
+								<td colspan="6">Total Beban</td>
+								<td>Rp {{grandtotalbeban}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-md-4">
+					<form>
+						<div class="form-group">
+							<label>Keterangan</label>
+							<input placeholder="Masukan Keterangan" class="form-control" type="text" name="" v-model="loss.nameBeban"/>
+						</div>
+						<div class="form-group">
+							<label>Nilai</label>
+							<input class="form-control" type="number" class="form-control" name="" v-model="loss.priceBeban">
+						</div>
+						<button class="btn btn-primary" @click.prevent="addBeban">Masukan Beban</button>
+					</form>
+				</div>
+			</div>
+		</div>
+
+	<!-- Akhir tampilan Beban pada layar user -->
+	
+<div class="container">
+	<div class="row">
+		<div class="col-md-8">
+		<table class="table table-bordered table-striped">
+			<tbody>
+				<tr>
+					<td>Total</td>
+					<td>Rp {{grandtotal}}</td>
+				</tr>
+			</tbody>
+		</table>
+		</div>
+	</div>
+</div>
+</div>
+
+
+	<script>
+		new Vue({
+			el: '#labarugi',
+			data: () => ({
+				title: 'Laporan Laba Rugi',
+				profits: [
+					{ namePendapatan: 'Pendapatan Usaha',  pricePendapatan: 80000},
+				],
+				profit: {
+					namePendapatan: '',
+					pricePendapatan: '0',
+				},
+				losses: [
+					{ nameBeban: 'Beban Operasional',  priceBeban: 56000},
+				],
+				loss: {
+					nameBeban: '',
+					priceBeban: '0',
+				},
+			}),
+			computed: {
+				subtotalpendapatan() {
+					return this.profits.reduce((total, item) => {return total + parseInt(item.pricePendapatan)}, 0)
+				},
+				grandtotalpendapatan() {
+					return this.subtotalpendapatan
+				},
+				subtotalbeban(){
+					return this.losses.reduce((total, item) => {return total + parseInt(item.priceBeban)}, 0)
+				},
+				grandtotalbeban(){
+					return this.subtotalbeban
+				},
+
+				grandtotal(){
+					return this.grandtotalpendapatan - this.grandtotalbeban
+				},
+			},
+			methods: {
+				addPendapatan(){
+					const nameP = this.profit.namePendapatan
+					const priceP = this.profit.pricePendapatan
+
+					this.profits.push({ namePendapatan: nameP, pricePendapatan: priceP })
+					this.clearPendapatan()
+				},
+				removePendapatan(item){
+					var del = this.profits.indexOf(item)
+					this.profits.splice(del, 1)
+
+				},
+				clearPendapatan(){
+					this.profits.namePendapatan = ''
+					this.profits.pricePendapatan = ''
+				},
+				pendapatanTotal(item){
+					return item.pricePendapatan
+				},
+				addBeban(){
+					const nameB = this.loss.nameBeban
+					const priceB = this.loss.priceBeban
+
+					this.losses.push({ nameBeban: nameB, priceBeban: priceB }) 
+					this.clearBeban()
+				},
+				removeBeban(item){
+					const del = this.losses.indexOf(item)
+					this.losses.splice(del, 1)
+
+				},
+				clearBeban(){
+					this.losses.nameBeban = ''
+					this.losses.priceBeban = ''
+				},
+				bebanTotal(item){
+					return item.priceBeban
+				},
+			},
+
+		});
+
+	</script>
+</body>
+</html>
