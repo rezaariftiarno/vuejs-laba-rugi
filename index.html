@@ -127,12 +127,15 @@
 </div>
 <footer>
   <!-- Copyright -->
-  <div class="footer-copyright text-center py-3">© 2020 Copyright:
+	<div class="footer-copyright text-center py-3">© <p id="tanggal"></p> Copyright:
     <a href="http://rezaariftiarno.my.id/" target="blank">Reza Ariftiarno, S.Ak</a>
   </div>
   <!-- Copyright -->
 </footer>
-
+        <script type="text/javascript">
+		var n = new Date()
+		document.getElementById("tanggal").innerHTML = n.getFullYear();
+	</script>
 
 	<script>
 		console.log("© 2020 Copyright: Reza Ariftiarno, S.Ak");
